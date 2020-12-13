@@ -15,6 +15,9 @@ Current replacement for issue tracking 🧠.
 
 - allow database export.
 - Create index over a bunch of fields.
+- A fancy index field: scrape all `data` fields (or just the whole block) for any string that
+  matches ss58 address format and store them. Then you can answer: **Give me all blocks tha had some
+  event affecting my account**.
 - CI job to dump the export somewhere public every week or sth; could also use a remote mongodb
   instance.
 - allow other databases.

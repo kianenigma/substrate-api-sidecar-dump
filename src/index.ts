@@ -159,7 +159,7 @@ async function calculateRewardFor(api: ApiPromise, who: string) {
       await continueScrape(api);
       break;
     case 'test':
-      await calculateRewardFor(api, "15yVR7d4VPLMC1KM2GsHDScQo7QjSSwrGPjD6rixNaWARHL7");
+      await calculateRewardFor(api, "16JSNGrqQKyx2pQur7TvqipVgPGRVBCRKUCCsJCxNcrunuN8");
       break;
     default:
       break;

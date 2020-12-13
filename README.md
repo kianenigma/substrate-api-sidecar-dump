@@ -1,34 +1,32 @@
-[![Build Status](https://travis-ci.org/{{github-user-name}}/{{github-app-name}}.svg?branch=master)](https://travis-ci.org/{{github-user-name}}/{{github-app-name}}.svg?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/{{github-user-name}}/{{github-app-name}}/badge.svg?branch=master)](https://coveralls.io/github/{{github-user-name}}/{{github-app-name}}?branch=master)
-[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+# substrate-api-sidecar-dump 💩
+A dead simple tool to scrape the default block endpoint of [`substrate-api-sidecare`](https://github.com/paritytech/substrate-api-sidecar) for the entire
+chain and allow queries on top of it.
 
-# Using this module in other modules
+For now only supports MongoDB. Might someday support TimescaleDB and more as well.
 
-Here is a quick example of how this module can be used in other modules. The [TypeScript Module Resolution Logic](https://www.typescriptlang.org/docs/handbook/module-resolution.html) makes it quite easy. The file `src/index.ts` is a [barrel](https://basarat.gitbooks.io/typescript/content/docs/tips/barrel.html) that re-exports selected exports from other files. The _package.json_ file contains `main` attribute that points to the generated `lib/index.js` file and `typings` attribute that points to the generated `lib/index.d.ts` file.
+> Work in progress.
 
-> If you are planning to have code in multiple files (which is quite natural for a NodeJS module) that users can import, make sure you update `src/index.ts` file appropriately.
 
-Now assuming you have published this amazing module to _npm_ with the name `my-amazing-lib`, and installed it in the module in which you need it -
+## Brain Dump
 
-- To use the `Greeter` class in a TypeScript file -
+Current replacement for issue tracking 🧠.
 
-```ts
-import { Greeter } from "my-amazing-lib";
+#### Database stuff
 
-const greeter = new Greeter("World!");
-greeter.greet();
-```
+- allow database export.
+- Create index over a bunch of fields.
+- CI job to dump the export somewhere public every week or sth; could also use a remote mongodb
+  instance.
+- allow other databases.
+- configurable database connection.
+- Provide write speed and query speed benchmarks.
+- Use `$in` instead of `$unwind` and benchmark results.
+#### Engineering
 
-- To use the `Greeter` class in a JavaScript file -
+- Better wrapper around database: use classes.
 
-```js
-const Greeter = require('my-amazing-lib').Greeter;
+#### sub-project: polkadot-pigeon
 
-const greeter = new Greeter('World!');
-greeter.greet();
-```
-
-## Setting travis and coveralls badges
-1. Sign in to [travis](https://travis-ci.org/) and activate the build for your project.
-2. Sign in to [coveralls](https://coveralls.io/) and activate the build for your project.
-3. Replace {{github-user-name}}/{{github-app-name}} with your repo details like: "ospatil/generator-node-typescript".
+- compute balance per week, per month, and per day + average for each
+- dump the results in a csv (as raw) + a pretty formatted pdf
+- encrypt + email both files + remove immediately.

@@ -14,6 +14,7 @@ Current replacement for issue tracking 🧠.
 #### Database stuff
 
 - [ ] allow database export.
+- [ ] buckets to optimize time based data https://docs.mongodb.com/manual/tutorial/model-time-data/.
 - [ ] Create index over a bunch of fields.
 - [ ] A fancy index field: scrape all `data` fields (or just the whole block) for any string that
   matches ss58 address format and store them. Then you can answer: **Give me all blocks tha had some

@@ -13,23 +13,24 @@ Current replacement for issue tracking 🧠.
 
 #### Database stuff
 
-- allow database export.
-- Create index over a bunch of fields.
-- A fancy index field: scrape all `data` fields (or just the whole block) for any string that
+- [ ] allow database export.
+- [ ] Create index over a bunch of fields.
+- [ ] A fancy index field: scrape all `data` fields (or just the whole block) for any string that
   matches ss58 address format and store them. Then you can answer: **Give me all blocks tha had some
   event affecting my account**.
-- CI job to dump the export somewhere public every week or sth; could also use a remote mongodb
+- [ ] CI job to dump the export somewhere public every week or sth; could also use a remote mongodb
   instance.
-- allow other databases.
-- configurable database connection.
-- Provide write speed and query speed benchmarks.
-- Use `$in` instead of `$unwind` and benchmark results.
+- [ ] allow other databases.
+- [ ] configurable database connection.
+- [ ] consider running this on a remote, public mongodb instance. 
+- [ ] Provide write speed and query speed benchmarks.
+- [ ] Use `$in` instead of `$unwind` and benchmark results.
 #### Engineering
 
-- Better wrapper around database: use classes.
+- [ ] Better wrapper around database: use classes. inspiration: https://gist.github.com/brennanMKE/ee8ea002d305d4539ef6, not sure if any good though.
 
 #### sub-project: polkadot-pigeon
 
-- compute balance per week, per month, and per day + average for each
-- dump the results in a csv (as raw) + a pretty formatted pdf
-- encrypt + email both files + remove immediately.
+- [ ] compute balance per week, per month, and per day + average for each
+- [ ] dump the results in a csv (as raw) + a pretty formatted pdf
+- [ ] encrypt + email both files + remove immediately.

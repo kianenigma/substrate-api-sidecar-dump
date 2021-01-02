@@ -1,0 +1,21 @@
+{
+  "name": "substrate-pigeon",
+  "version": "1.0.0",
+  "description": "a proper message delivery service for your staking rewards, just like the old days.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "kian paimani",
+  "license": "ISC",
+  "dependencies": {
+    "@polkadot/api": "2.0.1",
+    "@types/mongodb": "^3.6.0",
+    "@types/mongoose": "^5.10.2",
+    "bn.js": "^5.1.3",
+    "dotenv": "^8.2.0",
+    "sidecar-block-dump": "file:~/Desktop/Parity/sidecar-block-dump",
+    "ts-node": "^9.1.1",
+    "winston": "^3.3.3"
+  }
+}

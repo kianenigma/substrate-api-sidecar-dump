@@ -1,10 +1,12 @@
-import { Block, connect } from 'sidecar-block-dump/mongodb/index';
-import { ApiPromise, WsProvider } from '@polkadot/api';
 import * as BN from 'bn.js'
 import * as logExecutionTime from 'mongoose-execution-time';
-import * as dotenv from 'dotenv'
 
+import * as dotenv from 'dotenv'
 dotenv.config()
+
+import { BlockModel, connect } from 'sidecar-block-dump/mongodb/index';
+import { ApiPromise, WsProvider } from '@polkadot/api';
+
 const SUBSTRATE = process.env.SUBSTRATE_HOST;
 
 class RewardRecord {
@@ -55,7 +57,7 @@ class RewardPeriod {
   // TODO using unwind, I think I can do it also with $in
   async execute(who: string) {
     console.log(`📕 [${this.from} -> ${this.to}] (${who})`);
-    const rewardBlocks = await Block.aggregate([
+    const rewardBlocks = await BlockModel.aggregate([
       {
         $match: {
           time: { $gt: this.from, $lt: this.to },
@@ -138,7 +140,12 @@ enum MONTH {
   const api = await ApiPromise.create({ provider });
   const _database = await connect();
 
-  const december = new WeeklyRewardPeriod(new Date(2020, 11, 15), api);
-  await december.execute("Some account");
+  let who = "//account"
+  const december = new MonthlyRewardPeriod(MONTH.Dec, 2020, api);
+  await december.execute(who);
   december.toHuman()
+
+  const january = new MonthlyRewardPeriod(MONTH.Jan, 2021, api);
+  await january.execute(who);
+  january.toHuman()
 })();

@@ -1,5 +1,4 @@
-import { Document, Schema } from "mongoose";
-
+import { Document, Schema } from 'mongoose';
 
 export interface IFrameMethod extends Document {
   pallet: string;
@@ -18,7 +17,7 @@ export interface IExtrinsic extends Document {
   tip: number | null;
   args: any;
   hash: string;
-  info: {}
+  info: {};
   events: IEvent[];
   success: string | boolean;
   paysFee: boolean | null;
@@ -32,19 +31,19 @@ export const FrameMethodSchema: Schema = new Schema({
 export const EventSchema: Schema = new Schema({
   method: { type: FrameMethodSchema, required: true },
   data: { type: [{}], required: true },
-})
+});
 
+// TODO: we can and should remove most of these.
 export const ExtrinsicSchema: Schema = new Schema({
   // optional for unsigned
   signature: { type: {}, required: false },
   nonce: { type: Number, required: false },
   tip: { type: Number, required: false },
   method: { type: FrameMethodSchema, required: true },
-  args: { type: {}, required: true },
+  args: { type: {}, required: false },
   hash: { type: String, required: true },
-  info: { type: {}, required: true },
+  info: { type: {}, required: false },
   events: { type: [EventSchema], required: true },
   success: { type: String, required: true },
   paysFee: { type: Boolean, required: true },
-})
-
+});

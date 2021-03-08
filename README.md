@@ -13,8 +13,8 @@ Current replacement for issue tracking 🧠.
 
 #### Database stuff
 
-- [ ] allow database export.
-- [ ] buckets to optimize time based data https://docs.mongodb.com/manual/tutorial/model-time-data/.
+- [x] allow database export.
+- [x] buckets to optimize time based data https://docs.mongodb.com/manual/tutorial/model-time-data/.
 - [ ] Create index over a bunch of fields.
 - [ ] A fancy index field: scrape all `data` fields (or just the whole block) for any string that
   matches ss58 address format and store them. Then you can answer: **Give me all blocks tha had some
@@ -22,9 +22,9 @@ Current replacement for issue tracking 🧠.
 - [ ] CI job to dump the export somewhere public every week or sth; could also use a remote mongodb
   instance.
 - [ ] allow other databases.
-- [ ] configurable database connection.
+- [x] configurable database connection.
 - [ ] consider running this on a remote, public mongodb instance. 
-- [ ] Provide write speed and query speed benchmarks.
+- [x] Provide write speed and query speed benchmarks.
 - [ ] Use `$in` instead of `$unwind` and benchmark results.
 #### Engineering
 
@@ -32,6 +32,6 @@ Current replacement for issue tracking 🧠.
 
 #### sub-project: polkadot-pigeon
 
-- [ ] compute balance per week, per month, and per day + average for each
-- [ ] dump the results in a csv (as raw) + a pretty formatted pdf
+- [x] compute balance per week, per month, and per day + average for each
+- [x] dump the results in a csv (as raw) + a pretty formatted pdf
 - [ ] encrypt + email both files + remove immediately.

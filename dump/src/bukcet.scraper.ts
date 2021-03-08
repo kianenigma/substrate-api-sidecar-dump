@@ -8,8 +8,8 @@ import {
   allowExit,
 } from './index';
 import { logger } from './logger';
-import { IBlock, BlockModel } from '../mongodb/block';
-import { BucketModel, IBucket } from '../mongodb/bucket';
+import { IBlock, BlockModel } from './mongodb/block';
+import { BucketModel, IBucket } from './mongodb/bucket';
 import { get } from 'request-promise';
 import { ApiPromise } from '@polkadot/api';
 import * as Mongoose from 'mongoose';

@@ -1,13 +1,7 @@
 import * as BN from 'bn.js'
-import * as logExecutionTime from 'mongoose-execution-time';
 
-import * as dotenv from 'dotenv'
-dotenv.config()
-
-import { BlockModel, connect } from 'sidecar-block-dump/mongodb/index';
+import { BlockModel, connect } from '../../dump/src/mongodb/index';
 import { ApiPromise, WsProvider } from '@polkadot/api';
-
-const SUBSTRATE = process.env.SUBSTRATE_HOST;
 
 class RewardRecord {
   atTime: Date;
@@ -21,7 +15,7 @@ class RewardRecord {
   }
 }
 
-class RewardPeriod {
+export class RewardPeriod {
   api: ApiPromise;
   from: Date;
   to: Date;
@@ -96,7 +90,7 @@ class RewardPeriod {
   }
 }
 
-class MonthlyRewardPeriod extends RewardPeriod {
+export class MonthlyRewardPeriod extends RewardPeriod {
   constructor(month: MONTH, year: number, api: ApiPromise) {
     const from = new Date(year, month, 0);
     const to = new Date(year, month, 32);
@@ -104,7 +98,7 @@ class MonthlyRewardPeriod extends RewardPeriod {
   }
 }
 
-class WeeklyRewardPeriod extends RewardPeriod {
+export class WeeklyRewardPeriod extends RewardPeriod {
   constructor(from: Date, api: ApiPromise) {
     const tomorrow = new Date(from.getTime());
     tomorrow.setDate(tomorrow.getDate() + 7);
@@ -112,7 +106,7 @@ class WeeklyRewardPeriod extends RewardPeriod {
   }
 }
 
-class DailyRewardPeriod extends RewardPeriod {
+export class DailyRewardPeriod extends RewardPeriod {
   constructor(from: Date, api: ApiPromise) {
     const tomorrow = new Date(from.getTime());
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -120,7 +114,7 @@ class DailyRewardPeriod extends RewardPeriod {
   }
 }
 
-enum MONTH {
+export enum MONTH {
   Jan,
   Feb,
   Mar,
@@ -134,18 +128,3 @@ enum MONTH {
   Nov,
   Dec,
 }
-
-(async () => {
-  const provider = new WsProvider(SUBSTRATE);
-  const api = await ApiPromise.create({ provider });
-  const _database = await connect();
-
-  let who = "//account"
-  const december = new MonthlyRewardPeriod(MONTH.Dec, 2020, api);
-  await december.execute(who);
-  december.toHuman()
-
-  const january = new MonthlyRewardPeriod(MONTH.Jan, 2021, api);
-  await january.execute(who);
-  january.toHuman()
-})();

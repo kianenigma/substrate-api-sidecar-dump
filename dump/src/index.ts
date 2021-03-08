@@ -11,7 +11,7 @@ import {
   IBlock,
   BucketModel,
   IBucket,
-} from '../mongodb/index';
+} from './mongodb/index';
 import { blockRangeDetector } from './block_scraper';
 import { bucketRangeDetector } from './bukcet.scraper';
 import * as Mongoose from 'mongoose';
@@ -28,12 +28,16 @@ export const HOUR = MINUTE * 60;
 export const BUCKET_SIZE = 3 * HOUR;
 
 let command = 'scrape';
+let initiated = false;
 export let exitRequested = false;
 let exitAllowed = false;
 
 export const allowExit = (x: boolean) => (exitAllowed = x);
 const graceful = async () => {
   logger.warn('🗡  Signal received.');
+
+  if (!initiated) { process.exit(0); }
+
   exitRequested = true;
   setInterval(async () => {
     if (exitAllowed) {
@@ -133,6 +137,7 @@ export async function RequestBlock(
 
   logger.info(`database name = ${database.name} // node name = ${chain}`);
 
+  initiated = true;
   switch (command) {
     case 'scrape-bucket':
       try {

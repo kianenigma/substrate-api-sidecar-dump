@@ -8,4 +8,5 @@ lib
 lib_test
 .node_moduels
 .vscode
+.DS_Store
 accounts

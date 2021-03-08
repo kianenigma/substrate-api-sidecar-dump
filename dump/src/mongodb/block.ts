@@ -7,7 +7,7 @@ import {
   FrameMethodSchema,
 } from './primitives';
 import { Document, Schema, model } from 'mongoose';
-import { logger } from './../src/logger';
+import { logger } from '../logger';
 
 export interface IBlock extends Document {
   time: Date;

@@ -8,7 +8,7 @@ import {
 } from './index';
 import { get } from 'request-promise';
 import { logger } from './logger';
-import { BlockModel } from '../mongodb/block';
+import { BlockModel } from './mongodb/block';
 import { ApiPromise } from '@polkadot/api';
 import * as Mongoose from 'mongoose';
 

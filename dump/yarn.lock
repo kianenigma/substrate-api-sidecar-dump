@@ -1254,10 +1254,9 @@
     remark "^13.0.0"
     strip-markdown "^4.0.0"
 
-"@substrate/api-sidecar@4.0.2":
+"@substrate/api-sidecar@paritytech/substrate-api-sidecar#fix-metadata-regression":
   version "4.0.2"
-  resolved "https://registry.yarnpkg.com/@substrate/api-sidecar/-/api-sidecar-4.0.2.tgz#8f79dbbd60c3d4e847c35c578a01e1d25ea0b7a4"
-  integrity sha512-mRfeKVpmGlqT/GzwNou1jY4RnpTeK95GpzSJHKcXnMymI3ls+MYs0MMwmiUUzuO/3tK0I4oKkYpjuETzUoL11g==
+  resolved "https://codeload.github.com/paritytech/substrate-api-sidecar/tar.gz/902ffb8da8905eab5238736fc7ed959c2786a91a"
   dependencies:
     "@polkadot/api" "^4.2.1"
     "@polkadot/apps-config" "^0.85.1"

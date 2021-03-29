@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@polkadot/api": "4.2.1",
-    "@substrate/api-sidecar": "4.0.2",
+    "@substrate/api-sidecar": "paritytech/substrate-api-sidecar#fix-metadata-regression",
     "@types/async": "^3.2.5",
     "@types/bluebird": "^3.5.33",
     "@types/dotenv": "^8.2.0",

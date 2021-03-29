@@ -21,7 +21,7 @@ import { logger } from './logger';
 export const SIDECAR = process.env.SIDECAR_HOST;
 export const SUBSTRATE = process.env.SUBSTRATE_HOST;
 export const LOG_INTERVAL = Number(process.env.LOG_INTERVAL) || 10 * 1000;
-export const BATCH_SIZE = 32;
+export const BATCH_SIZE = 48;
 
 export const MINUTE = 10;
 export const HOUR = MINUTE * 60;
@@ -170,6 +170,9 @@ export async function RequestBlock(
       );
       logger.info(`💩 output: ${output.stdout}, ${output.stderr}`);
       exitAllowed = true;
+      break;
+    default:
+      logger.info(`💩 unknown command: ${command}`);
       break;
   }
 

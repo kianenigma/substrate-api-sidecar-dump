@@ -2,21 +2,21 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { ApiPromise, WsProvider } from '@polkadot/api';
+import { spawnSync } from 'child_process';
+import * as Mongoose from 'mongoose';
 import { get } from 'request-promise';
-import {
-  BlockModel,
-  connect,
-  IEvent,
-  DB_HOST,
-  IBlock,
-  BucketModel,
-  IBucket,
-} from './mongodb/index';
 import { blockRangeDetector } from './block_scraper';
 import { bucketRangeDetector } from './bukcet.scraper';
-import * as Mongoose from 'mongoose';
-import { spawnSync } from 'child_process';
 import { logger } from './logger';
+import {
+  BlockModel,
+  BucketModel,
+  connect,
+  DB_HOST,
+  IBlock,
+  IBucket,
+  IEvent,
+} from './mongodb/index';
 
 export const SIDECAR = process.env.SIDECAR_HOST;
 export const SUBSTRATE = process.env.SUBSTRATE_HOST;
@@ -27,7 +27,7 @@ export const MINUTE = 10;
 export const HOUR = MINUTE * 60;
 export const BUCKET_SIZE = 3 * HOUR;
 
-let command = 'scrape';
+let command = 'NOTHING';
 let initiated = false;
 export let exitRequested = false;
 let exitAllowed = false;
@@ -36,7 +36,9 @@ export const allowExit = (x: boolean) => (exitAllowed = x);
 const graceful = async () => {
   logger.warn('🗡  Signal received.');
 
-  if (!initiated) { process.exit(0); }
+  if (!initiated) {
+    process.exit(0);
+  }
 
   exitRequested = true;
   setInterval(async () => {
@@ -75,17 +77,17 @@ export async function RequestBlock(
 
   const allExtrinsicEvents: [IEvent] = current.extrinsics
     // @ts-ignore
-    .map(e => e.events)
+    .map((e) => e.events)
     .flat();
 
-  const hookEventMethods = hooksEvents.map(e => e.method);
-  const extrinsicMethods = allExtrinsicEvents.map(e => e.method);
+  const hookEventMethods = hooksEvents.map((e) => e.method);
+  const extrinsicMethods = allExtrinsicEvents.map((e) => e.method);
 
   const allEventMethods = hookEventMethods.concat(extrinsicMethods);
   // @ts-ignore
-  const allExtrinsicMethods = current.extrinsics.map(e => e.method);
+  const allExtrinsicMethods = current.extrinsics.map((e) => e.method);
 
-  let block = new BlockModel({
+  const block = new BlockModel({
     // default stuff from side-car
     time,
     number: current.number,

@@ -3,6 +3,9 @@
     "declaration": true,
     "module": "commonjs",
     "moduleResolution": "node",
+	// "esModuleInterop": true,
+	"resolveJsonModule": true,
+	"allowSyntheticDefaultImports": true,
     "lib": [
       "esnext"
     ],

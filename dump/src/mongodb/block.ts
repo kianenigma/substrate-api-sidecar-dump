@@ -1,13 +1,13 @@
+import { Document, model, Schema } from 'mongoose';
+import { logger } from '../logger';
 import {
-  IEvent,
-  IExtrinsic,
-  IFrameMethod,
   EventSchema,
   ExtrinsicSchema,
   FrameMethodSchema,
+  IEvent,
+  IExtrinsic,
+  IFrameMethod,
 } from './primitives';
-import { Document, Schema, model } from 'mongoose';
-import { logger } from '../logger';
 
 export interface IBlock extends Document {
   time: Date;
@@ -61,10 +61,7 @@ BlockSchema.post('aggregate', function () {
   if (this._startTime != null) {
     logger.debug(
       // @ts-ignore
-      `💽 query pipeline [${this._pipeline.map(e =>
-        Object.keys(e)[0].toString()
-        // @ts-ignore
-      )}] => ${Date.now() - this._startTime}ms`
+      `💽 query pipeline [${this._pipeline.map((e) =>Object.keys(e)[0].toString())}] => ${Date.now() - this._startTime}ms`
     );
   }
 });

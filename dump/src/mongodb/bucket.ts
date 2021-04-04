@@ -1,6 +1,6 @@
 import * as Mongoose from 'mongoose';
 import { Document, Schema } from 'mongoose';
-import { IBlock, BlockSchema } from './block';
+import { BlockSchema, IBlock } from './block';
 
 export interface IBucket extends Document {
   start: Date;

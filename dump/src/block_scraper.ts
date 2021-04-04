@@ -1,19 +1,19 @@
-import {
-  RequestBlock,
-  LOG_INTERVAL,
-  BATCH_SIZE,
-  SIDECAR,
-  exitRequested,
-  allowExit,
-} from './index';
-import { get } from 'request-promise';
-import { logger } from './logger';
-import { BlockModel } from './mongodb/block';
 import { ApiPromise } from '@polkadot/api';
 import * as Mongoose from 'mongoose';
+import { get } from 'request-promise';
+import {
+  allowExit,
+  BATCH_SIZE,
+  exitRequested,
+  LOG_INTERVAL,
+  RequestBlock,
+  SIDECAR,
+} from './index';
+import { logger } from './logger';
+import { BlockModel } from './mongodb/block';
 
 async function scrapeBlock(api: ApiPromise, at: number) {
-  let block = await RequestBlock(api, at);
+  const block = await RequestBlock(api, at);
   await block.save();
 }
 
@@ -32,11 +32,11 @@ async function scrapeBlockRange(
   let currentHeight = start;
 
   const cancelSpeed = setInterval(async () => {
-    let lastKnownSpeed =
+    const lastKnownSpeed =
       Math.abs(lastKnowHeight - currentHeight) / (LOG_INTERVAL / 1000);
     lastKnowHeight = currentHeight;
-    let lastKnownSize = (await database.db.stats()).dataSize;
-    let lastKnownDate = (
+    const lastKnownSize = (await database.db.stats()).dataSize;
+    const lastKnownDate = (
       await BlockModel.find({ number: currentHeight }).limit(1)
     ).pop()?.time;
     logger.info(
@@ -54,11 +54,11 @@ async function scrapeBlockRange(
   while (i != stop) {
     if (exitRequested) {
       // sleep for 2 secs, this should be enough to make sure the signal handler is picked up.
-      await new Promise(r => setTimeout(r, 2000));
+      await new Promise((r) => setTimeout(r, 2000));
     }
     const remaining = Math.abs(i - stop);
     const batchSize = Math.min(remaining, BATCH_SIZE);
-    let tasks = [];
+    const tasks = [];
     logger.debug(`starting a batch fetch from ${i} with size ${batchSize}.`);
     for (let t = 0; t < batchSize; t++) {
       tasks.push(scrapeBlock(api, i));
@@ -85,15 +85,11 @@ async function scrapeBlockRange(
 
 export async function blockRangeDetector(
   api: ApiPromise,
-  database: Mongoose.Connection,
+  database: Mongoose.Connection
 ) {
-  const maybeLowest = await BlockModel.find({})
-    .sort({ number: 1 })
-    .limit(1);
+  const maybeLowest = await BlockModel.find({}).sort({ number: 1 }).limit(1);
 
-  const maybeHighest = await BlockModel.find({})
-    .sort({ number: -1 })
-    .limit(1);
+  const maybeHighest = await BlockModel.find({}).sort({ number: -1 }).limit(1);
 
   const lowest = maybeLowest.length ? maybeLowest[0].number : 0;
   const highest = maybeHighest.length ? maybeHighest[0].number : 0;

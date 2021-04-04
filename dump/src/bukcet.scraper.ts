@@ -1,18 +1,18 @@
-import {
-  RequestBlock,
-  LOG_INTERVAL,
-  BATCH_SIZE,
-  BUCKET_SIZE,
-  SIDECAR,
-  exitRequested,
-  allowExit,
-} from './index';
-import { logger } from './logger';
-import { IBlock, BlockModel } from './mongodb/block';
-import { BucketModel, IBucket } from './mongodb/bucket';
-import { get } from 'request-promise';
 import { ApiPromise } from '@polkadot/api';
 import * as Mongoose from 'mongoose';
+import { get } from 'request-promise';
+import {
+  allowExit,
+  BATCH_SIZE,
+  BUCKET_SIZE,
+  exitRequested,
+  LOG_INTERVAL,
+  RequestBlock,
+  SIDECAR,
+} from './index';
+import { logger } from './logger';
+import { BlockModel, IBlock } from './mongodb/block';
+import { BucketModel, IBucket } from './mongodb/bucket';
 
 /**
  * scrapes all the block from `from_number` to `to_number` into a `iBucket`.
@@ -28,7 +28,9 @@ async function scrapeBucket(
   from_number: number,
   to_number: number
 ): Promise<IBucket> {
-  if (from_number == to_number) { return Promise.reject("failed"); }
+  if (from_number == to_number) {
+    return Promise.reject('failed');
+  }
 
   let blocks: IBlock[] = [];
   let current = from_number;
@@ -37,9 +39,11 @@ async function scrapeBucket(
     const leftover = Math.abs(current - to_number);
     const thisBatch = Math.min(BATCH_SIZE, leftover);
     if (isNaN(thisBatch)) {
-      return Promise.reject("failed");
+      return Promise.reject('failed');
     }
-    logger.debug(`preparing a batch with size ${thisBatch}, [${current}/${to_number}]`);
+    logger.debug(
+      `preparing a batch with size ${thisBatch}, [${current}/${to_number}]`
+    );
     for (let i = 0; i < thisBatch; i++) {
       if (to_number > current) {
         current++;
@@ -65,7 +69,7 @@ async function scrapeBucketRange(
   api: ApiPromise,
   database: Mongoose.Connection,
   start: number,
-  stop: number,
+  stop: number
 ) {
   if (start == stop) {
     return;
@@ -76,11 +80,11 @@ async function scrapeBucketRange(
   let currentHeight = start;
 
   const cancelSpeed = setInterval(async () => {
-    let lastKnownSpeed =
+    const lastKnownSpeed =
       Math.abs(lastKnowHeight - currentHeight) / (LOG_INTERVAL / 1000);
     lastKnowHeight = currentHeight;
-    let lastKnownSize = (await database.db.stats()).dataSize;
-    let lastKnownDate = (
+    const lastKnownSize = (await database.db.stats()).dataSize;
+    const lastKnownDate = (
       await BlockModel.find({ number: currentHeight }).limit(1)
     ).pop()?.time;
     logger.info(
@@ -97,17 +101,21 @@ async function scrapeBucketRange(
   while (currentHeight != stop) {
     if (exitRequested) {
       // sleep for 2 secs, this should be enough to make sure the signal handler is picked up.
-      await new Promise(r => setTimeout(r, 2000));
+      await new Promise((r) => setTimeout(r, 2000));
     }
     const remaining = Math.abs(currentHeight - stop);
     const bucketSize = Math.min(remaining, BUCKET_SIZE);
     const bucketFrom = currentHeight;
     const bucketTo =
-      currentHeight < stop ? currentHeight + bucketSize : currentHeight - bucketSize;
-    logger.info(`initiating a bucket scrape with size ${bucketSize} [${bucketFrom} -> ${bucketTo}]`)
+      currentHeight < stop
+        ? currentHeight + bucketSize
+        : currentHeight - bucketSize;
+    logger.info(
+      `initiating a bucket scrape with size ${bucketSize} [${bucketFrom} -> ${bucketTo}]`
+    );
     const bucket = await scrapeBucket(api, bucketFrom, bucketTo);
     allowExit(false);
-    await bucket.save()
+    await bucket.save();
     allowExit(true);
     currentHeight = bucketTo;
   }
@@ -120,30 +128,31 @@ async function scrapeBucketRange(
 
 export async function bucketRangeDetector(
   api: ApiPromise,
-  database: Mongoose.Connection,
+  database: Mongoose.Connection
 ) {
   const maybeLowest = await BucketModel.aggregate([
     { $unwind: '$blocks' },
-    { $project: { number: "$blocks.number" } },
-    { $group: { _id: "_id", number: { $min: "$number" } } },
+    { $project: { number: '$blocks.number' } },
+    { $group: { _id: '_id', number: { $min: '$number' } } },
   ]).allowDiskUse(true);
 
   const maybeHighest = await BucketModel.aggregate([
     { $unwind: '$blocks' },
-    { $project: { number: "$blocks.number" } },
-    { $group: { _id: "_id", number: { $max: "$number" } } },
+    { $project: { number: '$blocks.number' } },
+    { $group: { _id: '_id', number: { $max: '$number' } } },
   ]).allowDiskUse(true);
 
   const lowest = maybeLowest.length ? maybeLowest[0].number : 0;
   const highest = maybeHighest.length ? maybeHighest[0].number : 0;
   const height = JSON.parse(await get(`${SIDECAR}/blocks/head`)).number;
-  const allBlocks = (await BucketModel.aggregate([
-    { $unwind: "$blocks" }
-  ])).length;
+  const allBlocks = (await BucketModel.aggregate([{ $unwind: '$blocks' }]))
+    .length;
   const allRecords = await BucketModel.countDocuments();
 
   if (allBlocks !== allRecords * BUCKET_SIZE) {
-    logger.warn(`${allRecords} buckets and ${allBlocks} blocks don't add up with bucket size ${BUCKET_SIZE}. Did it change?`)
+    logger.warn(
+      `${allRecords} buckets and ${allBlocks} blocks don't add up with bucket size ${BUCKET_SIZE}. Did it change?`
+    );
   }
 
   const size = (await database.db.stats()).dataSize / 1024 / 1024;

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reward Tracker</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+    integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ=="
+    crossorigin="anonymous" />
+</head>
+
+<body onload="main()">
+
+  <div class="ui container">
+    <form id="form" class="ui form" style="margin-top: 20px;" onsubmit="return">
+      <div class="two fields">
+        <div class="field">
+          <label>From</label>
+          <input type="date" id="from" required placeholder="from date">
+        </div>
+        <div class="field">
+          <label>To</label>
+          <input type="date" id="to" required placeholder="to date">
+        </div>
+      </div>
+      <div class="field">
+        <label>Who (SS58)</label>
+        <input type="text" id="who" required placeholder="SS58 address">
+      </div>
+      <button id="btn" class="ui primary button" type="submit">Gimme my rewards!</button>
+    </form>
+
+    <div class="ui segment hide" id="output">
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+    integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw=="
+    crossorigin="anonymous"></script>
+  <script src="//unpkg.com/polkadot-js-bundle/polkadot.js"></script>
+
+  <script>
+    const $from = $("#from");
+    const $to = $("#to");
+    const $who = $("#who");
+    const $button = $("#btn")
+
+    function loading(set) {
+      if (set) {
+        $button.addClass('loading')
+        $button.attr('disabled', true)
+
+      } else {
+        $button.removeClass('loading')
+        $button.attr('disabled', false)
+      }
+    }
+
+    function isLoading() {
+      $button.hasClass('loading')
+    }
+
+    async function main() {
+      document.getElementById("from").valueAsDate = new Date(2021, 0, 1);
+      // document.getElementById("from").valueAsDate = new Date(new Date().getTime() - (30 * 1000 * 60 * 60 * 24));
+      document.getElementById("to").valueAsDate = new Date();
+      $who.val("1eTPAR2TuqLyidmPT9rMmuycHVm9s9czu78sePqg2KHMDrE");
+    }
+
+    $('#form').submit(async function (evt) {
+      if (isLoading()) {
+        console.log("Already doing something... wait")
+      }
+      loading(true);
+      evt.preventDefault();
+      evt.stopPropagation();
+      const payload = {
+        from: $from.val(),
+        to: $to.val(),
+        who: $who.val()
+      };
+      const network = payload.who[0] === "1" ? "wss://rpc.polkadot.io/" : "wss://kusama-rpc.polkadot.io/"
+      const provider = new api.WsProvider(network);
+      const chain = await api.ApiPromise.create({ provider });
+
+      let result = await $.get("reward", payload);
+      const { sum, csv } = result;
+      console.log(sum, csv);
+      $("#output").append(`<p>Using RPC endpoint for balance parsing: ${network}</p>`)
+      $("#output").append(`<p>Sum = ${chain.createType('Balance', sum).toHuman()}</p>`)
+      $("#output").append(`<pre>${csv}</pre>`)
+      loading(false);
+    });
+  </script>
+
+
+</body>
+
+</html>

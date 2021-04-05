@@ -3,6 +3,9 @@
     "declaration": true,
     "module": "commonjs",
     "moduleResolution": "node",
+    // "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "lib": [
       "esnext"
     ],
@@ -17,7 +20,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },

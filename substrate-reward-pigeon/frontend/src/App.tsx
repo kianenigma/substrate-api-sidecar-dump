@@ -3,10 +3,13 @@ import { Main } from './components/main'
 
 
 function App() {
+  function now() {
+    new Date();
+  }
   return (
     <div className="App">
       <Main></Main>
-    </div>
+    </div >
   );
 }
 

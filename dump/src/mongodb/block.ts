@@ -1,13 +1,13 @@
-import { Document, model, Schema } from 'mongoose';
-import { logger } from '../logger';
+import { Document, model, Schema } from 'mongoose'
+import { logger } from '../logger'
 import {
-  EventSchema,
-  ExtrinsicSchema,
-  FrameMethodSchema,
-  IEvent,
-  IExtrinsic,
-  IFrameMethod,
-} from './primitives';
+	EventSchema,
+	ExtrinsicSchema,
+	FrameMethodSchema,
+	IEvent,
+	IExtrinsic,
+	IFrameMethod
+} from './primitives'
 
 export interface IBlock extends Document {
   time: Date;
@@ -24,6 +24,8 @@ export interface IBlock extends Document {
   allEventMethods: IFrameMethod[];
   allExtrinsicMethods: IFrameMethod[];
 
+  RewardedAccounts: string[],
+
   extrinsicsCount: number;
   extrinsicsEventCount: number;
   hooksEventCount: number;
@@ -31,39 +33,39 @@ export interface IBlock extends Document {
 }
 
 export const BlockSchema: Schema = new Schema({
-  time: { type: Date, required: true },
-  number: { type: Number, required: true, unique: true },
-  hash: { type: String, required: true, unique: true },
-  parentHash: { type: String, required: true },
-  extrinsicsRoot: { type: String, required: true },
-  authorId: { type: String },
-  logs: { type: [{}] },
-  onInitialize: { type: [EventSchema], required: true },
-  onFinalize: { type: [EventSchema], required: true },
-  extrinsics: { type: [ExtrinsicSchema], required: true },
+	time: { type: Date, required: true },
+	number: { type: Number, required: true, unique: true },
+	hash: { type: String, required: true, unique: true },
+	parentHash: { type: String, required: true },
+	extrinsicsRoot: { type: String, required: true },
+	authorId: { type: String },
+	logs: { type: [{}] },
+	onInitialize: { type: [EventSchema], required: true },
+	onFinalize: { type: [EventSchema], required: true },
+	extrinsics: { type: [ExtrinsicSchema], required: true },
 
-  allEventMethods: { type: [FrameMethodSchema], required: true },
-  allExtrinsicMethods: { type: [FrameMethodSchema], required: true },
+	allEventMethods: { type: [FrameMethodSchema], required: true },
+	allExtrinsicMethods: { type: [FrameMethodSchema], required: true },
 
-  extrinsicsCount: { type: Number, required: true },
-  extrinsicsEventCount: { type: Number, required: true },
-  hooksEventCount: { type: Number, required: true },
-  totalEventCount: { type: Number, required: true },
-});
+	extrinsicsCount: { type: Number, required: true },
+	extrinsicsEventCount: { type: Number, required: true },
+	hooksEventCount: { type: Number, required: true },
+	totalEventCount: { type: Number, required: true }
+})
 
 BlockSchema.pre('aggregate', function () {
-  // @ts-ignore
-  this._startTime = Date.now();
-});
+	// @ts-ignore
+	this._startTime = Date.now()
+})
 
 BlockSchema.post('aggregate', function () {
-  // @ts-ignore
-  if (this._startTime != null) {
-    logger.debug(
-      // @ts-ignore
-      `💽 query pipeline [${this._pipeline.map((e) =>Object.keys(e)[0].toString())}] => ${Date.now() - this._startTime}ms`
-    );
-  }
-});
+	// @ts-ignore
+	if (this._startTime != null) {
+		logger.debug(
+			// @ts-ignore
+			`💽 query pipeline [${this._pipeline.map((e) => Object.keys(e)[0].toString())}] => ${Date.now() - this._startTime}ms`
+		)
+	}
+})
 
-export const BlockModel = model<IBlock>('Block', BlockSchema);
+export const BlockModel = model<IBlock>('Block', BlockSchema)

@@ -2,22 +2,17 @@ import * as dotenv from 'dotenv'
 dotenv.config()
 
 import { connect } from '../../dump/src/mongodb/index';
-import { ApiPromise, WsProvider, } from '@polkadot/api';
-import { Keyring } from '@polkadot/keyring';
 import { MonthlyRewardPeriod, MONTH, RewardPeriod } from './reward'
 import { Application, Request, Response, NextFunction } from 'express';
-import * as BN from 'bn.js'
-
-const keyring = new Keyring({ type: 'sr25519', ss58Format: 1 });
+import { BN } from "bn.js";
 
 const express = require('express')
 const bodyParser = require('body-parser');
 
 const app: Application = express()
 const port = 3000
-const SUBSTRATE = process.env.SUBSTRATE_HOST;
 
-let provider, api: ApiPromise, _database;
+let _database;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -70,7 +65,7 @@ app.get('/reward', validateParams(), async (req, res) => {
   const from = new Date(fromRaw);
   const to = new Date(toRaw);
 
-  let period = new RewardPeriod(from, to, api);
+  let period = new RewardPeriod(from, to);
   await period.execute(who);
   let sum = new BN(0);
   period.records.forEach((record) => {
@@ -82,8 +77,6 @@ app.get('/reward', validateParams(), async (req, res) => {
 })
 
 app.listen(port, async () => {
-  provider = new WsProvider(SUBSTRATE);
-  api = await ApiPromise.create({ provider });
   _database = await connect();
   console.log(`Example app listening at http://localhost:${port}`)
 })

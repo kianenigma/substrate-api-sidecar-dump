@@ -1,0 +1,31 @@
+{
+  "name": "substrate-reward-pigeon",
+  "version": "1.0.0",
+  "description": "a proper message delivery service for your staking rewards, just like the old days.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "./node_modules/.bin/nodemon --exec ./node_modules/.bin/ts-node ./src/index.ts",
+    "start": "./node_modules/.bin/ts-node ./src/index.ts",
+    "update": "././node_modules/.bin/ncu -u && yarn",
+    "lint": "eslint . --ext .ts --fix",
+    "build": "./node_modules/.bin/tsc --pretty"
+  },
+  "author": "kian Paimani",
+  "license": "ISC",
+  "dependencies": {
+    "bn.js": "^5.2.0",
+    "body-parse": "^0.1.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "winston": "^3.3.3",
+    "mongoose": "6.0.8"
+  },
+  "devDependencies": {
+    "@types/bn.js": "^5.1.0",
+    "@types/express": "^4.17.13",
+    "ncu": "0.2.1",
+    "nodemon": "2.0.13",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3"
+  }
+}

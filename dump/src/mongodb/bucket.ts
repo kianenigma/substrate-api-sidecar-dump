@@ -1,6 +1,6 @@
-import * as Mongoose from 'mongoose';
-import { Document, Schema } from 'mongoose';
-import { BlockSchema, IBlock } from './block';
+import * as Mongoose from 'mongoose'
+import { Document, Schema } from 'mongoose'
+import { BlockSchema, IBlock } from './block'
 
 export interface IBucket extends Document {
   start: Date;
@@ -9,9 +9,9 @@ export interface IBucket extends Document {
 }
 
 export const BucketSchema: Schema = new Schema({
-  from: { type: Date, required: true },
-  to: { type: Date, required: true },
-  blocks: { type: [BlockSchema], required: true },
-});
+	from: { type: Date, required: true },
+	to: { type: Date, required: true },
+	blocks: { type: [BlockSchema], required: true }
+})
 
-export const BucketModel = Mongoose.model<IBucket>('Bucket', BucketSchema);
+export const BucketModel = Mongoose.model<IBucket>('Bucket', BucketSchema)
